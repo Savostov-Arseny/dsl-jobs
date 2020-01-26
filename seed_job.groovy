@@ -73,8 +73,13 @@ parameters {
        choiceParam('Playbook', ['set_up_swarm.yml', 'destroy_swarm.yml', 'docker_prune_agents.yml', 'deploy_latest.yml'])
    }
 steps{
-  shell("docker run -v /home/ubuntu/management-tools/Ansible/conf:/etc/ansible \
--v /home/ubuntu/management-tools/Ansible/Playbooks:/ansible/playbooks \
--v /opt/swarm_key:/opt/private_key ansible \$Playbook ")
+   publishOverSsh {
+            server('Ansible') {
+                transferSet {
+                   execCommand('ansible-playbook /etc/ansible/playbooks/\$Playbook')
+                }
+            }
+        }
+
 }
 }
